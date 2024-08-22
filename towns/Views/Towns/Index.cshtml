@@ -4,18 +4,40 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Towns List</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Add a New Town</a>
 </p>
+<form asp-controller="Towns" asp-action="Index" method="get">
+    <p>
+        Name: <input type="text" name="SearchString" value="@ViewData["SearchString"]" />
+        <input type="submit" value="Filter" class="btn btn-info" />
+    </p>
+</form>
+
+<form asp-controller="Towns" asp-action="Index" method="get">
+    <p>
+        <input type="text" name="SearchString" value="@ViewData["SearchString"]" class="d-none" />
+        <input type="text" name="sortType" value="asc" class="d-none" />
+        <input type="submit" value="sort ascending" class="btn btn-success" />
+    </p>
+</form>
+
+<form asp-controller="Towns" asp-action="Index" method="get">
+    <p>
+        <input type="text" name="SearchString" value="@ViewData["SearchString"]" class="d-none" />
+        <input type="text" name="sortType" value="desc" class="d-none"/>
+        <input type="submit" value="sort descending" class="btn btn-success"/>
+    </p>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Town
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,7 +48,6 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

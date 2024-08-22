@@ -20,9 +20,26 @@ namespace towns.Controllers
         }
 
         // GET: Towns
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortType, string searchString)
         {
-            return View(await _context.Town.ToListAsync());
+            ViewData["SearchString"] = searchString;
+            var towns = from t in _context.Town
+                         select t;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                towns = towns.Where(t => t.Name!.ToUpper().Contains(searchString.ToUpper()));
+            }
+            if (sortType == "asc")
+            {
+                towns = towns.OrderBy(t => t.Name);
+            }
+            else if (sortType == "desc")
+            {
+                towns = towns.OrderByDescending(t => t.Name);
+            }
+            return View(await towns.ToListAsync());
+            //return View(await _context.Town.Where(t=>String.IsNullOrEmpty(searchString) || t.Name.Contains(searchString)).ToListAsync());
         }
 
         // GET: Towns/Details/5
@@ -67,7 +84,7 @@ namespace towns.Controllers
                 catch (Exception ex)
                 {
                     if (ex.InnerException!.Message.Contains("duplicate")) {
-                        @ViewData["ErrorMessage"] = "This town already exists. Perhaps you mistyped the name of the town?";
+                        ViewData["ErrorMessage"] = "This town already exists. Perhaps you mistyped the name of the town?";
                     }
                     return View(town);
                 }
